@@ -3,51 +3,51 @@
 Akabot, a 6 degree of freedom (DOF) robot arm, is controlled using the ROS2 robotic manipulation platform, MoveIt 2. The ROS2 Humble version of MoveIt 2 is used, which runs in a Docker container on an Nvidia Jetson Nano board. The robot arm is equipped with an Intel Realsense D415 depth camera used to detect ArUco markers on objects to be picked up.
 
 <p align="center">
-  <img title='Front view upright' src=docs/images/front_view_upright.jpg width="400">
+<img title='Front view upright' src=docs/images/front_view_upright.jpg width="400">
 </p>
 
-<br/>
-
 <p align='center'>
-    <img src=docs/images/gazebo_moveit_rviz.gif width="800">
+<img src=docs/images/gazebo_moveit_rviz.gif width="800">
 </p>
 
 ***(Work in Progress)***
 
 ## Package Overview
-- [`akabot_aruco`](./akabot_aruco/) : Contains configuration, launch and node files to use ArUco markers with akabot.
-- [`akabot_bringup`](./akabot_bringup/) : Contains `ros2_control` hardware component for PCA985 servo driver, launch files to bring up the depth camera and the real akabot.
-- [`akabot_description`](./akabot_description/) : Contains the URDF description files for akabot, sensors and `ros2_control`.
-- [`akabot_gazebo`](./akabot_gazebo/) : Contains configuration, launch and world files needed to simulate akabot in Gazebo Harmonic.
-- [`akabot_gazebo_classic`](./akabot_gazebo/) : Contains configuration, launch and world files needed to simulate akabot in Gazebo Classic.
-- [`akabot_moveit_config`](./akabot_moveit_config/) : Contains configuration files for MoveIt2.
+
+- `akabot_aruco` : Contains configuration, launch and node files to use ArUco markers with akabot.
+- `akabot_bringup` : Contains `ros2_control` hardware component for PCA985 servo driver, launch files to bring up the depth camera and the real akabot.
+- `akabot_description` : Contains the URDF description files for akabot, sensors and `ros2_control`.
+- `akabot_gazebo` : Contains configuration, launch and world files needed to simulate akabot in Gazebo Fortress.
+- `akabot_moveit_config` : Contains configuration files for MoveIt2.
 
 ## Hardware
+
 ### Part list
+
 The following components were used in this project:
 
-| | Part |
-| --| --|
-|1| [Robot arm kit](https://s.click.aliexpress.com/e/_DlScAGX)| 
-|2| Nvidia Jetson Nano 4GB|
-|3| Nvidia Jetson Nano case (optional)|
-|4| SanDisk 64 GB SD Card|
-|5| [PCA9685 16 channel PWM Servo Driver](https://s.click.aliexpress.com/e/_DlScAGX)|
-|5| 5V 5A (minimum) regulated power supply|
-|6| Toggle switch|
+|  | Part |
+|--|------|
+| 1 | [Robot arm kit](https://s.click.aliexpress.com/e/_DlScAGX) |
+| 2 | Nvidia Jetson Nano 4GB |
+| 3 | Nvidia Jetson Nano case (optional) |
+| 4 | SanDisk 64 GB SD Card |
+| 5 | [PCA9685 16 channel PWM Servo Driver](https://s.click.aliexpress.com/e/_DlScAGX) |
+| 5 | 5V 5A (minimum) regulated power supply |
+| 6 | Toggle switch |
 
 ***Note:*** The robot arm kit does not include a 5V regulated power supply, thus 18650 batteries were initially used as seen in the pictures above and the media in the calibration section. However, this was replaced with a 5V regulated power supply to make regulated power available to the servo motors.
 
 Some other tools or parts used in the project are as follows:
 
-| | Tool/Part |
-| -- | -- |
-|1| Wooden plank / base|
-|2| Drill and a 3mm drill bit |
-|3| M4 screws (length dependent on plank thickness)|
-|4| 4x M3 standoffs (minimum 10mm in length)|
-|5| Duck tape|
-|5| Double-sided tape|
+|  | Tool/Part |
+|--|-----------|
+| 1 | Wooden plank / base |
+| 2 | Drill and a 3mm drill bit |
+| 3 | M4 screws (length dependent on plank thickness) |
+| 4 | 4x M3 standoffs (minimum 10mm in length) |
+| 5 | Duck tape |
+| 5 | Double-sided tape |
 
 There are different choices available for the servo motors when purchasing the robot arm kit. This project uses 4 M996R servos and 2 YF6125MG servo motors.
 
@@ -56,24 +56,24 @@ There are different choices available for the servo motors when purchasing the r
 The servo motors will need to be calibrated to ensure that servos move in the expected range when rotating. For calibration, the electronic components are connected as shown in the wiring digram below.
 
 <p align="center">
-  <img title='Wiring diagram' src=docs/images/akabot_wiring.png width="800">
+<img title='Wiring diagram' src=docs/images/akabot_wiring.png width="800">
 </p>
 
 The PWM Servo driver board pins are connected to the Jetson Nano GPIO pins to use the i2c interface as follows:
 
-| PWM servo driver board | Jetson Nano pins|
-| ----------- | ------------|
-| VCC         | 5V |
-| GND         | GND |
-| SCL         | 5 |
-| SDA         | 3 |
+| PWM servo driver board | Jetson Nano pins |
+|------------------------|------------------|
+| VCC | 5V |
+| GND | GND |
+| SCL | 5 |
+| SDA | 3 |
 
 The servo motors are plugged into channels 1 to 6 on the PWM servo motor driver board.
 
 The following image shows the components connected for servo calibration - the first two servo motors are YF6125MG type servo motors, while the remaining 4 are M996R type servo motors.
 
 <p align='center'>
-  <img title='Calibration wiring' src=docs/images/calibration_wiring.jpg width="600">
+<img title='Calibration wiring' src=docs/images/calibration_wiring.jpg width="600">
 </p>
 
 <!-- Waveshare's [PCA9685 python library](https://www.waveshare.com/wiki/Servo_Driver_HAT#Downlaod_the_example_program_.26_unzip_to_the_specified_directory) is used in calibrating the servos. The `rotate_servo.py` script, located in `akabot_controllers/scripts`, is used to rotate each servo from 0 degrees to 180 degrees, with a 1 second pause when the servo is supposedly at 90 degrees.  -->
@@ -82,24 +82,11 @@ The following image shows the components connected for servo calibration - the f
 <!---->
 <!-- To know how to use the `rotate_servo.py` to calibrate the servos, run `python3 rotate_servo.py -h` in the terminal and this will be outputted: -->
 <!---->
-<!-- ``` -->
-<!-- usage: rotate_servo.py [-h] [-c CHANNEL] [-a] -->
-<!---->
-<!-- optional arguments: -->
-<!--   -h, --help            show this help message and exit -->
-<!--   -c CHANNEL, --channel CHANNEL -->
-<!--                         choose a servo channel from 1 to 6 for rotation -->
-<!--   -a, --all             rotate all servos -->
-<!-- ``` -->
+<!-- `--> <!-- usage: rotate_servo.py [-h] [-c CHANNEL] [-a] --> <!----> <!-- optional arguments: --> <!--   -h, --help            show this help message and exit --> <!--   -c CHANNEL, --channel CHANNEL --> <!--                         choose a servo channel from 1 to 6 for rotation --> <!--   -a, --all             rotate all servos --> <!--` -->
 <!---->
 <!-- To rotate an individual servo, servo 1, for instance, the command `python3 rotate_servo.py --channel 1` is executed in the terminal resulting in this output: -->
 <!---->
-<!-- ``` -->
-<!-- Servo 1 is rotating ... -->
-<!-- Pausing rotation at 90 degrees -->
-<!-- Rotation continues ... -->
-<!-- Rotation completed -->
-<!-- ``` -->
+<!-- `--> <!-- Servo 1 is rotating ... --> <!-- Pausing rotation at 90 degrees --> <!-- Rotation continues ... --> <!-- Rotation completed --> <!--` -->
 <!---->
 <!-- Considerations are made in the `rotate_servo.py` script for the different servo types, as some adjustments need to be made to obtain similar operations from both types.  -->
 <!---->
@@ -109,37 +96,7 @@ The following image shows the components connected for servo calibration - the f
 <!---->
 <!-- Which prints this output in the terminal: -->
 <!---->
-<!-- ``` -->
-<!-- Servo 1 is rotating ... -->
-<!-- Pausing rotation at 90 degrees -->
-<!-- Rotation continues ... -->
-<!-- Rotation completed -->
-<!---->
-<!-- Servo 2 is rotating ... -->
-<!-- Pausing rotation at 90 degrees -->
-<!-- Rotation continues ... -->
-<!-- Rotation completed -->
-<!---->
-<!-- Servo 3 is rotating ... -->
-<!-- Pausing rotation at 90 degrees -->
-<!-- Rotation continues ... -->
-<!-- Rotation completed -->
-<!---->
-<!-- Servo 4 is rotating ... -->
-<!-- Pausing rotation at 90 degrees -->
-<!-- Rotation continues ... -->
-<!-- Rotation completed -->
-<!---->
-<!-- Servo 5 is rotating ... -->
-<!-- Pausing rotation at 90 degrees -->
-<!-- Rotation continues ... -->
-<!-- Rotation completed -->
-<!---->
-<!-- Servo 6 is rotating ... -->
-<!-- Pausing rotation at 90 degrees -->
-<!-- Rotation continues ... -->
-<!-- Rotation completed -->
-<!-- ``` -->
+<!-- `--> <!-- Servo 1 is rotating ... --> <!-- Pausing rotation at 90 degrees --> <!-- Rotation continues ... --> <!-- Rotation completed --> <!----> <!-- Servo 2 is rotating ... --> <!-- Pausing rotation at 90 degrees --> <!-- Rotation continues ... --> <!-- Rotation completed --> <!----> <!-- Servo 3 is rotating ... --> <!-- Pausing rotation at 90 degrees --> <!-- Rotation continues ... --> <!-- Rotation completed --> <!----> <!-- Servo 4 is rotating ... --> <!-- Pausing rotation at 90 degrees --> <!-- Rotation continues ... --> <!-- Rotation completed --> <!----> <!-- Servo 5 is rotating ... --> <!-- Pausing rotation at 90 degrees --> <!-- Rotation continues ... --> <!-- Rotation completed --> <!----> <!-- Servo 6 is rotating ... --> <!-- Pausing rotation at 90 degrees --> <!-- Rotation continues ... --> <!-- Rotation completed --> <!--` -->
 <!---->
 <!-- An animation of all the servos rotating is shown below.  -->
 <!---->
@@ -154,29 +111,29 @@ The electronic connections for Akabot are the same as detailed in the calibratio
 The assembled robot arm is shown again below.
 
 <p align="center">
-  <img title='Side view upright' src=docs/images/side_view_upright.jpg width="400">
+<img title='Side view upright' src=docs/images/side_view_upright.jpg width="400">
 </p>
 
 <p align="center">
-  <img title='Connections' src=docs/images/connections.jpg width="400">
-  <img title='Front view stowed' src=docs/images/front_view_stowed.jpg width="400">
+<img title='Connections' src=docs/images/connections.jpg width="400">
+<img title='Front view stowed' src=docs/images/front_view_stowed.jpg width="400">
 </p>
 
-The PWM servo driver board is stuck to the robot arm base with double-sided tape and the robot arm base is attached to a wooden plank with M4 screws, for stability when Akabot is in motion. 
+The PWM servo driver board is stuck to the robot arm base with double-sided tape and the robot arm base is attached to a wooden plank with M4 screws, for stability when Akabot is in motion.
 
 Four M3 10mm brass standoffs were screwed into the ones provided in the robot arm kit. This is done to create an allowance to mount the D415 depth camera to the base with double-sided tape.
 
-Finally, the D415 depth camera is plugged into one of the USB ports of the Jetson Nano. 
+Finally, the D415 depth camera is plugged into one of the USB ports of the Jetson Nano.
 
 ## Installation
-
 
 ## Docker Setup
 
 TODO:
+
 - [ ] Upload docker image to DockerHub
 
-In the Nvidia Jetson Nano, navigate to the source folder in the ROS2 workspace, `akabot_ws` in this case: 
+In the Nvidia Jetson Nano, navigate to the source folder in the ROS2 workspace, `akabot_ws` in this case:
 
 ```
 cd akabot_ws/src
@@ -185,7 +142,7 @@ cd akabot_ws/src
 Then run the following command to spin up a Docker container in detached mode:
 
 ```
-docker compose up -d
+docker-compose up -d
 ```
 
 Run this command to attach to the container:
@@ -203,11 +160,11 @@ cd /home/akabot_ws/src
 ## Rviz
 
 <p align="center">
-  <img title='Rviz view 1' src=docs/images/rviz_1.png width="400">
-  <img title='Rviz view 2' src=docs/images/rviz_2.png width="400">
+<img title='Rviz view 1' src=docs/images/rviz_1.png width="400">
+<img title='Rviz view 2' src=docs/images/rviz_2.png width="400">
 </p>
 
-## Gazebo Classic
+## Gazebo Fortress
 
 Launch MoveIt2 and RViz:
 
@@ -215,16 +172,16 @@ Launch MoveIt2 and RViz:
 ros2 launch akabot_moveit_config moveit_rviz.launch.py use_sim_time:=True
 ```
 
-Launch Gazebo Classic:
+Launch Gazebo Fortress:
+
 ```
-ros2 launch akabot_gazebo_classic gazebo_launch.py
+ros2 launch akabot_gazebo gz_launch.py
 ```
 
 <p align='center'>
-    <img src=docs/images/gazebo_moveit_rviz.gif width="800">
+<img src=docs/images/gazebo_moveit_rviz.gif width="800">
 </p>
 
-
 ## Acknowledgment
-- [Ar4 ros driver](https://github.com/ycheng517/ar4_ros_driver)
 
+- [Ar4 ros driver](https://github.com/ycheng517/ar4_ros_driver)
