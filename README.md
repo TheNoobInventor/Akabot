@@ -7,7 +7,7 @@ Akabot, a 6 degree of freedom (DOF) robot arm, is controlled using the ROS2 robo
 </p>
 
 <p align='center'>
-<img src=docs/images/gazebo_moveit_rviz.gif width="800">
+<img src=docs/images/gazebo_moveit_rviz.png width="800">
 </p>
 
 ***(Work in Progress)***
@@ -179,7 +179,7 @@ ros2 launch akabot_gazebo gz_launch.py
 ```
 
 <p align='center'>
-<img src=docs/images/gazebo_moveit_rviz.gif width="800">
+<img src=docs/images/gazebo_moveit_rviz.png width="800">
 </p>
 
 ## Acknowledgment
