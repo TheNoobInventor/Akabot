@@ -1,4 +1,4 @@
-# Launches akabot in Gazebo Classic
+# Launches akabot in Gazebo Fortress
 #
 # File adapted from https://automaticaddison.com
 
@@ -8,7 +8,6 @@ from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
     IncludeLaunchDescription,
-    AppendEnvironmentVariable,
 )
 
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -40,9 +39,6 @@ def generate_launch_description():
     bridge_params = os.path.join(pkg_path, "config/akabot_bridge.yaml")
     world_filename = "pick_and_place.world"
     world_path = os.path.join(pkg_path, "worlds", world_filename)
-    set_env_vars_resources = AppendEnvironmentVariable(
-        "GZ_SIM_RESOURCE_PATH", os.path.join(pkg_path, "models")
-    )
 
     # Launch configuration variables specific to simulation
     world = LaunchConfiguration("world")
@@ -152,7 +148,6 @@ def generate_launch_description():
 
     # Declare the launch options
     ld.add_action(declare_world_cmd)
-    ld.add_action(set_env_vars_resources)
 
     # Add any actions
     ld.add_action(start_robot_state_publisher_cmd)
